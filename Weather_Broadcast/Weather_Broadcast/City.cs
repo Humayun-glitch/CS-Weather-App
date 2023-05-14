@@ -1,28 +1,37 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using NUnit.Framework;
+using Weather_Broadcast;
 
-namespace Weather_Broadcast
+namespace Weather_Broadcast_Tests
 {
-   public class City
+    [TestFixture]
+    public class CityTests
     {
-        public string Name { get; private set; }     
-
-        public City(string name)
+        [Test]
+        public void CityConstructor_WithName_SetsName()
         {
-            Name = name;
+            // Arrange
+            string cityName = "TestCity";
+
+            // Act
+            City city = new City(cityName);
+
+            // Assert
+            Assert.AreEqual(cityName, city.Name);
         }
 
-        public int GetCityIDFromCityName()
+        [TestCase("TestCity", 1)]
+        [TestCase("AnotherCity", 2)]
+        [TestCase("UnknownCity", -1)]
+        public void GetCityIDFromCityName_WithValidOrInvalidCityName_ReturnsExpectedResult(string cityName, int expectedCityID)
         {
-            if (Constant.MapOfCityNameAndID.TryGetValue(Name, out int cityID))
-            {
-                return cityID;
-            }
-            return -1;
+            // Arrange
+            City city = new City(cityName);
+
+            // Act
+            int cityID = city.GetCityIDFromCityName();
+
+            // Assert
+            Assert.AreEqual(expectedCityID, cityID);
         }
     }
 }
